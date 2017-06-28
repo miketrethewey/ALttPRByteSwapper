@@ -91,18 +91,19 @@ def calc_color(color,sprite):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument('--loglevel',	default='info',		const='info',	nargs='?',	choices=['error', 'info', 'warning', 'debug'], help='Select level of logging for output.')
+    parser.add_argument('--loglevel',		default='info',		const='info',	nargs='?',	choices=['error', 'info', 'warning', 'debug'], help='Select level of logging for output.')
     parser.add_argument('--rom', help='Path to a lttp rom to be patched.')
-    parser.add_argument('--heartbeep',	default='normal',	const='info',	nargs='?',	choices=['normal','off','half','quarter','double'],			help='Heart Beep Speed')
-    parser.add_argument('--fullSprite',	default='full',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Full Heart Sprite')
-    parser.add_argument('--halfSprite',	default='half',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Half Heart Sprite')
-    parser.add_argument('--emptySprite',default='empty',	const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Empty Heart Sprite')
-    parser.add_argument('--newSprite',	default='new',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='New Heart Sprite')
-    parser.add_argument('--fullColor',	default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Full Heart Color')
-    parser.add_argument('--halfColor',	default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Half Heart Color')
-    parser.add_argument('--emptyColor',	default='black',	const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Empty Heart Color')
-    parser.add_argument('--newColor',	default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='New Heart Color')
-    parser.add_argument('--sramTrace',	default='off',		const='info',	nargs='?',	choices=['off','on'],							help='SRAM Trace')
+    parser.add_argument('--heartbeep',		default='normal',	const='info',	nargs='?',	choices=['normal','off','half','quarter','double'],			help='Heart Beep Speed')
+    parser.add_argument('--fullSprite',		default='full',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Full Heart Sprite')
+    parser.add_argument('--halfSprite',		default='half',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Half Heart Sprite')
+    parser.add_argument('--emptySprite',	default='empty',	const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='Empty Heart Sprite')
+    parser.add_argument('--newSprite',		default='new',		const='info',	nargs='?',	choices=['full','half','empty','new','zero','one','two','four','eight'],help='New Heart Sprite')
+    parser.add_argument('--fullColor',		default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Full Heart Color')
+    parser.add_argument('--halfColor',		default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Half Heart Color')
+    parser.add_argument('--emptyColor',		default='black',	const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='Empty Heart Color')
+    parser.add_argument('--newColor',		default='red',		const='info',	nargs='?',	choices=['black','green','red','yellow'],				help='New Heart Color')
+    parser.add_argument('--sramTrace',		default='off',		const='info',	nargs='?',	choices=['off','on'],							help='SRAM Trace')
+    parser.add_argument('--frameAdvance',	default='off',		const='info',	nargs='?',	choices=['off','on'],							help='Frame Advance')
     args = parser.parse_args()
 
     if args.rom is None:
@@ -148,6 +149,18 @@ if __name__ == '__main__':
     write_byte(rom,byte,value)
     logger.debug("SRAM Trace:")
     logger.debug(' ' + str("On" if args.sramTrace == "on" else "Off"))
+
+    logger.debug('')
+
+    # FRAME ADVANCE
+    byte 	= 0x39
+    value	= 0xEA if args.frameAdvance == 'on' else 0x80
+    write_byte(rom,byte,value)
+    byte 	= 0x3A
+    value	= 0xEA if args.frameAdvance == 'on' else 0x16
+    write_byte(rom,byte,value)
+    logger.debug("Frame Advance:")
+    logger.debug(' ' + str("On" if args.frameAdvance == "on" else "Off"))
 
     logger.debug('')
 
